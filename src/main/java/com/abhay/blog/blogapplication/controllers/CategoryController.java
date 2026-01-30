@@ -12,6 +12,8 @@ import com.abhay.blog.blogapplication.payloads.ApiResponse;
 import com.abhay.blog.blogapplication.payloads.CategoryDto;
 import com.abhay.blog.blogapplication.services.CategoryService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,14 +30,14 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/")
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto cateogDto){
+    public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto cateogDto){
      CategoryDto createdCategory = this.categoryService.createCategory(cateogDto);
      return new ResponseEntity<CategoryDto>(createdCategory, HttpStatus.CREATED);
     
     }
 
      @PutMapping("/{catId}")
-    public ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryDto categoryId, @PathVariable Integer catId){
+    public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto categoryId, @PathVariable Integer catId){
      CategoryDto updatedCategory = this.categoryService.updateCategory(categoryId, catId);
      return new ResponseEntity<CategoryDto>(updatedCategory, HttpStatus.OK);
     
