@@ -52,27 +52,31 @@ public class PostServiceImpl  implements PostService{
     }
 
     @Override
-    public Post updatePost(PostDto postDto, Integer postId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updatePost'");
+    public PostDto  updatePost(PostDto postDto, Integer postId) {
+        Post post = this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "PostId", postId));
+            post.setTitle(postDto.getTitle());
+            post.setContent(postDto.getContent());
+          Post updatedPost =  this.postRepo.save(post);
+          return this.modelMapper.map(updatedPost, PostDto.class); 
     }
 
     @Override
     public void deletePost(Integer postId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deletePost'");
+       Post post = this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "PostID", postId));
+         this.postRepo.delete(post);
     }
 
     @Override
-    public List<Post> getAllPost() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllPost'");
+    public List<PostDto> getAllPost() {
+      List<Post> allPosts = this.postRepo.findAll();
+      List<PostDto> postDtos = allPosts.stream().map((post)-> this.modelMapper.map( post, PostDto.class)).collect(Collectors.toList());
+      return postDtos;
     }
 
     @Override
-    public Post gePostById(Integer postId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'gePostById'");
+    public PostDto gePostById(Integer postId) {
+      Post singlePost = this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "PostID", postId));
+       return this.modelMapper.map(singlePost, PostDto.class);
     }
 
     @Override
