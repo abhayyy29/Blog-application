@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.abhay.blog.blogapplication.entities.Post;
 import com.abhay.blog.blogapplication.payloads.PostDto;
+import com.abhay.blog.blogapplication.payloads.PostResponse;
 
 public interface PostService {
 
@@ -13,13 +14,13 @@ public interface PostService {
 
     void deletePost(Integer postId);
 
-    List<PostDto> getAllPost(Integer pageNumber, Integer pageSize);
+    PostResponse getAllPost(Integer pageNumber, Integer pageSize);
 
     PostDto gePostById(Integer postId);
 
-    List<PostDto> getPostsByCategory(Integer categoryId);
+    PostResponse getPostsByCategory(Integer categoryId, Integer pageNumber, Integer pageSize);
 
-    List<PostDto> getPostsByUser(Integer userId);
+    PostResponse getPostsByUser(Integer userId, Integer pageNumber, Integer pageSize);
 
     List<Post> searchPosts(String keyword);
 }

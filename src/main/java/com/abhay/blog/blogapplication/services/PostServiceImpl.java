@@ -16,6 +16,7 @@ import com.abhay.blog.blogapplication.entities.Post;
 import com.abhay.blog.blogapplication.entities.User;
 import com.abhay.blog.blogapplication.exceptions.ResourceNotFoundException;
 import com.abhay.blog.blogapplication.payloads.PostDto;
+import com.abhay.blog.blogapplication.payloads.PostResponse;
 import com.abhay.blog.blogapplication.repositeries.CategoryRepo;
 import com.abhay.blog.blogapplication.repositeries.PostRepo;
 import com.abhay.blog.blogapplication.repositeries.UserRepo;
@@ -70,13 +71,20 @@ public class PostServiceImpl  implements PostService{
     }
 
     @Override
-    public List<PostDto> getAllPost(Integer pageNumber, Integer pageSize) {
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
            Pageable p = PageRequest.of(pageNumber, pageSize);
 
       Page<Post> pagePost = this.postRepo.findAll(p);
       List<Post> allPosts = pagePost.getContent();
       List<PostDto> postDtos = allPosts.stream().map((post)-> this.modelMapper.map( post, PostDto.class)).collect(Collectors.toList());
-      return postDtos;
+      PostResponse postResponse = new PostResponse();
+      postResponse.setContent(postDtos);
+      postResponse.setPageNumber(pagePost.getNumber());
+      postResponse.setPageSize(pagePost.getSize());
+      postResponse.setTotalElements(pagePost.getTotalElements());
+      postResponse.setTotalPages(pagePost.getTotalPages());
+      postResponse.setLastPage(pagePost.isLast());
+      return postResponse;
     }
 
     @Override
@@ -86,21 +94,41 @@ public class PostServiceImpl  implements PostService{
     }
 
     @Override
-    public List<PostDto> getPostsByCategory(Integer categoryId) {
+    public PostResponse getPostsByCategory(Integer categoryId , Integer pageNumber, Integer pageSize) {
        
-        Category category = this.categoryRepo.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("category", "CategoryId", categoryId));
-        List<Post> posts = this.postRepo.findByCategory(category);
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+       Category category = this.categoryRepo.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("category", "CategoryId", categoryId));
+        Page<Post> pagePost = this.postRepo.findByCategory(category, p); 
+       List<Post> posts = pagePost.getContent();       
         List<PostDto> postDtos =    posts.stream().map((post)-> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
-        return postDtos;
-}
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(postDtos);
+        postResponse.setPageNumber(pagePost.getNumber());
+      postResponse.setPageSize(pagePost.getSize());
+      postResponse.setTotalElements(pagePost.getTotalElements());
+      postResponse.setTotalPages(pagePost.getTotalPages());
+      postResponse.setLastPage(pagePost.isLast());
+      return postResponse;
+    }
+    
+
 
     @Override
-    public List<PostDto> getPostsByUser(Integer userId) {
+    public PostResponse getPostsByUser(Integer userId , Integer pageNumber, Integer pageSize) {
       
+        Pageable p = PageRequest.of(pageNumber, pageSize);
         User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "UserId", userId));
-        List<Post> posts = this.postRepo.findByUser(user);
+        Page<Post> pagePost = this.postRepo.findByUser(user,p);
+        List<Post> posts = pagePost.getContent();
         List<PostDto> postDtos = posts.stream().map((post)-> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
-        return postDtos;
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(postDtos);
+         postResponse.setPageNumber(pagePost.getNumber());
+      postResponse.setPageSize(pagePost.getSize());
+      postResponse.setTotalElements(pagePost.getTotalElements());
+      postResponse.setTotalPages(pagePost.getTotalPages());
+      postResponse.setLastPage(pagePost.isLast());
+      return postResponse;
     }
 
     @Override
