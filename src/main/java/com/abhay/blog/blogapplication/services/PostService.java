@@ -1,8 +1,6 @@
 package com.abhay.blog.blogapplication.services;
 
 import java.util.List;
-
-import com.abhay.blog.blogapplication.entities.Post;
 import com.abhay.blog.blogapplication.payloads.PostDto;
 import com.abhay.blog.blogapplication.payloads.PostResponse;
 
@@ -14,7 +12,7 @@ public interface PostService {
 
     void deletePost(Integer postId);
 
-    PostResponse getAllPost(Integer pageNumber, Integer pageSize);
+    PostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
     PostDto gePostById(Integer postId);
 
@@ -22,5 +20,5 @@ public interface PostService {
 
     PostResponse getPostsByUser(Integer userId, Integer pageNumber, Integer pageSize);
 
-    List<Post> searchPosts(String keyword);
+    List<PostDto> searchPosts(String keyword);
 }
