@@ -1,20 +1,34 @@
 package com.abhay.blog.blogapplication.controllers;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.abhay.blog.blogapplication.config.AppConstants;
 import com.abhay.blog.blogapplication.payloads.ApiResponse;
 import com.abhay.blog.blogapplication.payloads.PostDto;
 import com.abhay.blog.blogapplication.payloads.PostResponse;
+import com.abhay.blog.blogapplication.services.FileService;
 import com.abhay.blog.blogapplication.services.PostService;
+
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 
 @RestController
@@ -23,6 +37,12 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private FileService fileService;
+
+    @Value("${project.image}")
+    private String path;
 
     @RequestMapping("/user/{userId}/category/{categoryId}/posts")
     public ResponseEntity<PostDto> createPost(
@@ -34,21 +54,21 @@ public class PostController {
         return new ResponseEntity<PostDto>(createPost, HttpStatus.CREATED);
     }
 
-    @GetMapping("/user/{userId}/posts")    
+    @GetMapping("/user/{userId}/posts")
     public ResponseEntity<PostResponse> getPostByUser(
         @PathVariable Integer userId,
-        @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-        @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize
+        @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+        @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize
     ){
     PostResponse posts = this.postService.getPostsByUser(userId,pageNumber,pageSize);
     return new ResponseEntity<PostResponse>(posts,HttpStatus.OK);
     }
 
-    @GetMapping("/category/{categoryId}/posts")    
+    @GetMapping("/category/{categoryId}/posts")
     public ResponseEntity<PostResponse> getPostByCategory(
         @PathVariable Integer categoryId,
-        @RequestParam(value = "pageNumber", defaultValue = "0",required = false) Integer pageNumber,
-        @RequestParam(value = "pageSize", defaultValue = "5",required = false) Integer pageSize
+        @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+        @RequestParam(value = "pageSize", defaultValue =  AppConstants.PAGE_SIZE ,required = false) Integer pageSize
     ){
     PostResponse posts = this.postService.getPostsByCategory(categoryId,pageNumber,pageSize);
     return new ResponseEntity<PostResponse>(posts,HttpStatus.OK);
@@ -56,10 +76,10 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<PostResponse> getAllPosts(
-        @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-        @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
-        @RequestParam(value = "sortBy", defaultValue = "postId", required = false) String sortBy,
-        @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
+        @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+        @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+        @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
+        @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir
     ){
     PostResponse allPost =  this.postService.getAllPost(pageNumber,pageSize,sortBy,sortDir);
     return new ResponseEntity<PostResponse>(allPost,HttpStatus.OK);
@@ -92,4 +112,29 @@ public class PostController {
     return new ResponseEntity<List<PostDto>>(result, HttpStatus.OK);
     }
 
+    @PostMapping("/post/image/upload/{postId}")
+    public ResponseEntity<PostDto> uploadPostImage(
+        @RequestParam("image") MultipartFile image,
+        @PathVariable Integer postId
+    ) throws IOException {
+        PostDto postDto = this.postService.gePostById(postId);
+    String fileName =  this.fileService.uploadImage(path, image);
+    postDto.setImageName(fileName);
+    PostDto updatePost = this.postService.updatePost(postDto, postId);
+    return new ResponseEntity<PostDto>(updatePost, HttpStatus.OK);
+    
+    }
+
+    @GetMapping(value = "post/image/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public void downloadImage(
+        @PathVariable("imageName") String imageNAme,
+        HttpServletResponse response
+    ) throws IOException {
+    
+        InputStream resource = this.fileService.getResorce(path, imageNAme);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource, response.getOutputStream());
+    }
+
 }
+
