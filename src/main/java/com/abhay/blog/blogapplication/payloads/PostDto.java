@@ -1,6 +1,8 @@
 package com.abhay.blog.blogapplication.payloads;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 import jakarta.persistence.JoinColumn;
@@ -26,6 +28,8 @@ public class PostDto {
 
     @ManyToOne
     private UserDto user;
+
+    private Set<CommentDto> comments = new HashSet<>();
 }
 
 

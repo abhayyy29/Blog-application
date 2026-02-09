@@ -1,4 +1,7 @@
 package com.abhay.blog.blogapplication.payloads;
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -29,41 +32,8 @@ public class UserDto {
     @NotEmpty
     private String about;
 
-    // public UserDto(){
-    // }
-      
-    // public int getId(){
-    //     return id;
-    // }
-    // public String getName(){
-    //     return name;
-    // }
+    private Set<CommentDto> comments = new HashSet<>();
 
-    // public String getEmail(){
-    //     return email;
-    // }
-    // public String getPassword(){
-    //     return password;
-    // }
-    // public String getAbout(){
-    //     return about;
-    // }
-
-    // public void setId(int id){
-    //     this.id=id;
-    // }
-    // public void setName(String name){
-    //     this.name = name;
-    // }
-    // public void setEmail(String email){
-    //     this.email=email;
-    // }
-    // public void setPassword(String password){
-    //     this.password = password;
-    // }
-    // public void setAbout(String about){
-    //   this.about = about;
-    // }
 }
 
 
