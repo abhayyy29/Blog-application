@@ -1,4 +1,4 @@
-package com.abhay.blog.blogapplication.security;
+package com.abhay.blog.blogapplication.payloads;
 
 import lombok.Getter;
 import lombok.Setter;

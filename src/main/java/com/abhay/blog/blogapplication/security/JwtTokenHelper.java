@@ -20,7 +20,7 @@ public class JwtTokenHelper {
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
-    private String secret = "jwtTokenKey";
+    private String secret = "abhayblogapplicationverystrongkeyforjwtsecurity2026";
 
     public String getUsernameFromToken(String token){
         return getClaimFromToken(token,Claims::getSubject);

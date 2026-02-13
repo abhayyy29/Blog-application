@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.abhay.blog.blogapplication.entities.User;
 import com.abhay.blog.blogapplication.payloads.UserDto;
@@ -15,34 +16,38 @@ import com.abhay.blog.blogapplication.exceptions.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-      @Autowired
-      private UserRepo userRepo;
+    @Autowired
+    private UserRepo userRepo;
 
-      @Autowired
-      private ModelMapper modelMapper; 
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     @Override
     public UserDto createUser(UserDto userDto) {
         User user = dtoToUser(userDto);
-         User savedUser = this.userRepo.save(user);
-         return this.userToDto(savedUser);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User savedUser = this.userRepo.save(user);
+        return this.userToDto(savedUser);
     }
 
     @Override
     public UserDto updateUser(UserDto userDto, Integer userId) {
-          User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "Id", userId));
-          user.setName(userDto.getName());
-          user.setEmail(userDto.getEmail());
-          user.setPassword(userDto.getPassword());
-          user.setAbout(userDto.getAbout());
-          User updateSaved = this.userRepo.save(user);
-          UserDto userDto1 = this.userToDto(updateSaved);
-          return userDto1;
+        User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "Id", userId));
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setAbout(userDto.getAbout());
+        User updateSaved = this.userRepo.save(user);
+        UserDto userDto1 = this.userToDto(updateSaved);
+        return userDto1;
         }
 
     @Override
     public UserDto getUserById(Integer userId) {
-       
+    
         User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "Id", userId));
         UserDto user1 = this.userToDto(user);
         return user1;
