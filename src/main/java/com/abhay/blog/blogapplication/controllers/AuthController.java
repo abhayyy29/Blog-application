@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abhay.blog.blogapplication.exceptions.ApiException;
 import com.abhay.blog.blogapplication.payloads.JwtAuthRequest;
 import com.abhay.blog.blogapplication.payloads.JwtAuthResponse;
 import com.abhay.blog.blogapplication.security.JwtTokenHelper;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 
@@ -42,10 +44,15 @@ public class AuthController {
         return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
     }
 
-    private void authenticate(String username , String password){
+    private void authenticate(String username , String password) {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username , password);
+        try{
         this.authenticationManager.authenticate(authenticationToken);
+        }catch(BadCredentialsException e){
+            System.out.println("Invalid Details");
+            throw new ApiException("Invalid username or pass");
+        }
     }
 
 }
