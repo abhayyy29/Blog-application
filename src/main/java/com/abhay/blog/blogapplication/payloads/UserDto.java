@@ -2,6 +2,8 @@ package com.abhay.blog.blogapplication.payloads;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.abhay.blog.blogapplication.entities.Role;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -33,6 +35,8 @@ public class UserDto {
     private String about;
 
     private Set<CommentDto> comments = new HashSet<>();
+
+    private Set<Role> roles = new HashSet<>();
 
 }
 

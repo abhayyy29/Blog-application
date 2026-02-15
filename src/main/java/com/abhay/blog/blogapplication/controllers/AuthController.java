@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.abhay.blog.blogapplication.exceptions.ApiException;
 import com.abhay.blog.blogapplication.payloads.JwtAuthRequest;
 import com.abhay.blog.blogapplication.payloads.JwtAuthResponse;
+import com.abhay.blog.blogapplication.payloads.UserDto;
 import com.abhay.blog.blogapplication.security.JwtTokenHelper;
+import com.abhay.blog.blogapplication.services.UserService;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,6 +35,9 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserService userService;
     
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> createToken( @RequestBody JwtAuthRequest request){
@@ -55,4 +60,19 @@ public class AuthController {
         }
     }
 
+    // register new user api
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto){
+
+        UserDto registeredUser =  this.userService.registerNewUser(userDto);
+        return new ResponseEntity<UserDto>(registeredUser,HttpStatus.CREATED);
+    }
+
+    // register new Admin
+    @PostMapping("/registerAdmin")
+    public ResponseEntity<UserDto> registerAdminUser(@RequestBody UserDto userDto){
+
+        UserDto registeredUser =  this.userService.registerNewAdminUser(userDto);
+        return new ResponseEntity<UserDto>(registeredUser,HttpStatus.CREATED);
+    }
 }
