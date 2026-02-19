@@ -6,6 +6,5 @@ import com.abhay.blog.blogapplication.entities.Role;
 
 
 public interface RoleRepo extends JpaRepository<Role,Integer>{
-
-    
+    boolean existsByName(String name);
 }

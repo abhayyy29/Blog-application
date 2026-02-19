@@ -35,18 +35,24 @@ public class BlogapplicationApplication  implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		System.out.println(this.passwordEncoder.encode("xyz"));
 		try{
-			Role role = new Role();
-			role.setId(AppConstants.ADMIN_USER);
-			role.setName("ADMIN");
+			if(!roleRepo.existsByName("ADMIN")){
+			Role admin = new Role();
+			// admin.setId(AppConstants.ADMIN_USER);
+			admin.setName("ADMIN");
+			roleRepo.save(admin);
+			}
+			if(!roleRepo.existsByName("USER")){
+			Role user = new Role();
+			// user.setId(AppConstants.NORMAL_USER);
+			user.setName("USER");
+			roleRepo.save(user);
+			}
 
-			Role role1 = new Role();
-			role.setId(AppConstants.NORMAL_USER);
-			role.setName("USER");
+		    // List<Role> roles = List.of(admin, user);
+			// List<Role> result = this.roleRepo.saveAll(roles);
 
-		    List<Role> roles = List.of(role, role1);
-			List<Role> result = this.roleRepo.saveAll(roles);
-
-			result.forEach(r->{
+			roleRepo.findAll()
+			.forEach(r->{
 				System.out.println(r.getName());
 			});
 			
