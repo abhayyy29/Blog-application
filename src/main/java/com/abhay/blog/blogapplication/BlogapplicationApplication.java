@@ -1,6 +1,6 @@
 package com.abhay.blog.blogapplication;
 
-import java.util.List;
+// import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.abhay.blog.blogapplication.config.AppConstants;
+// import com.abhay.blog.blogapplication.config.AppConstants;
 import com.abhay.blog.blogapplication.entities.Role;
 import com.abhay.blog.blogapplication.repositeries.RoleRepo;
 

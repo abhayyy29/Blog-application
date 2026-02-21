@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
         // roles
-        Role role = this.roleRepo.findById(AppConstants.NORMAL_USER).get();
+        Role role = this.roleRepo.findByName("USER").get();
 
         user.getRoles().add(role);
         User newUser = this.userRepo.save(user);
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
         // roles
-        Role role = this.roleRepo.findById(AppConstants.ADMIN_USER).get();
+        Role role = this.roleRepo.findByName("ADMIN").get();
 
         user.getRoles().add(role);
         User newUser = this.userRepo.save(user);
