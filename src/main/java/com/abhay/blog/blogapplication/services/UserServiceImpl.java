@@ -1,6 +1,7 @@
 package com.abhay.blog.blogapplication.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -113,6 +114,12 @@ public class UserServiceImpl implements UserService {
         user.getRoles().add(role);
         User newUser = this.userRepo.save(user);
         return this.modelMapper.map(newUser, UserDto.class);
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        User user = this.userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("user", "email", email));
+        return this.modelMapper.map(user, UserDto.class);
     }
 
 }

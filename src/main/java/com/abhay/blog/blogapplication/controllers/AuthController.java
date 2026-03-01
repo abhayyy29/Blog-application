@@ -1,15 +1,19 @@
 package com.abhay.blog.blogapplication.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abhay.blog.blogapplication.entities.User;
 import com.abhay.blog.blogapplication.exceptions.ApiException;
 import com.abhay.blog.blogapplication.payloads.JwtAuthRequest;
 import com.abhay.blog.blogapplication.payloads.JwtAuthResponse;
@@ -22,7 +26,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthController {
@@ -44,8 +48,11 @@ public class AuthController {
         this.authenticate(request.getUsername(),request.getPassword());
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getUsername());
         String token = this.jwtTokenHelper.generateToken(userDetails);
+        UserDto userDto = this.userService.getUserByEmail(request.getUsername());
         JwtAuthResponse response = new JwtAuthResponse();
         response.setToken(token);
+        response.setId(userDto.getId());
+
         return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
     }
 

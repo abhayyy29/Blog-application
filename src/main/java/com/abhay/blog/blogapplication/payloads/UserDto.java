@@ -1,5 +1,6 @@
 package com.abhay.blog.blogapplication.payloads;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import com.abhay.blog.blogapplication.entities.Role;
@@ -37,6 +38,8 @@ public class UserDto {
     private Set<CommentDto> comments = new HashSet<>();
 
     private Set<Role> roles = new HashSet<>();
+
+    
 
 }
 
