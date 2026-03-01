@@ -44,7 +44,7 @@ public class PostController {
     @Value("${project.image}")
     private String path;
 
-    @RequestMapping("/user/{userId}/category/{categoryId}/posts")
+    @PostMapping("/user/{userId}/category/{categoryId}/posts")
     public ResponseEntity<PostDto> createPost(
         @RequestBody PostDto postDto,
         @PathVariable Integer userId,
