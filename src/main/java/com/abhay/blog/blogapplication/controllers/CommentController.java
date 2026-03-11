@@ -1,6 +1,8 @@
 package com.abhay.blog.blogapplication.controllers;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import com.abhay.blog.blogapplication.payloads.ApiResponse;
 import com.abhay.blog.blogapplication.payloads.CommentDto;
 import com.abhay.blog.blogapplication.services.CommentService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 @RestController
@@ -23,6 +27,12 @@ public class CommentController {
 
     @Autowired
     private CommentService commentService;
+
+    @GetMapping("/post/{postId}/comments")
+    public ResponseEntity<List<CommentDto>> getCommentsByPost(@PathVariable Integer postId) {
+        List<CommentDto> comments = this.commentService.getCommentsByPost(postId);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
 
     @PostMapping("/user/{userId}/post/{postId}/comments")
     public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentDto ,@PathVariable Integer userId ,@PathVariable Integer postId){

@@ -1,5 +1,8 @@
 package com.abhay.blog.blogapplication.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +46,13 @@ public class CommentServiceImpl implements CommentService{
     public void deleteComment(Integer commentId) {
       Comment com = this.commentRepo.findById(commentId).orElseThrow(()-> new ResourceNotFoundException("Comment", "CommentID", commentId));
       this.commentRepo.delete(com);
+    }
+
+    @Override
+    public List<CommentDto> getCommentsByPost(Integer postId) {
+      Post post = this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "PostId", "postId"));
+      List<Comment> comments = this.commentRepo.findByPost(post);
+      return comments.stream().map(comment -> this.modelMapper.map(comment, CommentDto.class)).collect(Collectors.toList());
     }
 
 }

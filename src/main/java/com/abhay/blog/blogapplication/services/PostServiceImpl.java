@@ -37,7 +37,7 @@ public class PostServiceImpl  implements PostService{
 
     @Autowired
     private CategoryRepo categoryRepo;
-   
+  
     @Override
 
     public PostDto createPost(PostDto postDto , Integer userId, Integer categoryId) {
@@ -50,8 +50,8 @@ public class PostServiceImpl  implements PostService{
         post.setAddedDate(new Date());
         post.setCategory(category);
         post.setUser(user);
-       Post createdPost = this.postRepo.save(post);
-       return this.modelMapper.map(createdPost, PostDto.class);
+        Post createdPost = this.postRepo.save(post);
+        return this.modelMapper.map(createdPost, PostDto.class);
     
 
     }
@@ -68,8 +68,8 @@ public class PostServiceImpl  implements PostService{
 
     @Override
     public void deletePost(Integer postId) {
-       Post post = this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "PostID", postId));
-         this.postRepo.delete(post);
+      Post post = this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "PostID", postId));
+      this.postRepo.delete(post);
     }
 
     @Override
