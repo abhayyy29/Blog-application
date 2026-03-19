@@ -79,10 +79,13 @@ public class SecurityConfig{
             )
         
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/v1/auth/**","/api/users/**").permitAll()
+            .requestMatchers("/api/v1/auth/**","/api/users/**","/oauth2/**","/login/**").permitAll()
             .requestMatchers(HttpMethod.GET).permitAll()
             .anyRequest()
             .authenticated()
+        )
+        .oauth2Login(oauth -> oauth
+            .defaultSuccessUrl("/oauth-success", true)
         )
         .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);
         
